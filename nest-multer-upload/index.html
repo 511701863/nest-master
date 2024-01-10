@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <span>多文件</span><input id="fileInput" type="file" multiple />
+    <span>单文件</span><input id="fileInputSingle" type="file" multiple />
+    <span>大文件分片上传</span><input id="fileInputLarge" type="file" multiple />
+    <script>
+        //多文件
+        const fileInput = document.querySelector('#fileInput');
+
+        async function formData() {
+            const data = new FormData();
+            data.set('name', '文件');
+            data.set('age', 20);
+            [...fileInput.files].forEach(item => {
+                data.append('bbb', item)
+            })
+
+            const res = await axios.post('http://localhost:3000/uploads', data);
+            console.log(res);
+        }
+
+        fileInput.onchange = formData;
+
+        //单文件
+        const fileInputSingle = document.querySelector('#fileInputSingle');
+
+        async function formDataSingle() {
+            const data = new FormData();
+            data.set('name', '文件');
+            data.set('age', 20);
+            data.set('aaa', fileInputSingle.files[0]);
+
+            const res = await axios.post('http://localhost:3000/upload', data);
+            console.log(res);
+        }
+
+        fileInputSingle.onchange = formDataSingle;
+
+
+        //分片上传
+        const fileInputLarge = document.querySelector('#fileInputLarge');
+
+        async function formDataLarge() {
+            const file = fileInputLarge.files[0];
+            console.log(file);
+
+            //分片
+            const chunks = [];
+            // 分片大小
+            const chunkSize = 20 * 1024;
+
+            let startPos = 0;
+            while (startPos < file.size) {
+                chunks.push(file.slice(startPos, startPos + chunkSize));
+                startPos += chunkSize;
+            }
+            const randomStr = Math.random().toString().slice(2, 8)
+            const task = []
+            chunks.map((chunk, index) => {
+                const data = new FormData();
+                data.set('name', randomStr + '_' + file.name + '-' + index)
+                data.append('files', chunk);
+                task.push(axios.post('http://localhost:3000/largeFileUpload', data))
+            })
+            await Promise.all(task)
+            axios.get('http://localhost:3000/merge?name=' + randomStr + '_' + file.name);
+        }
+
+        fileInputLarge.onchange = formDataLarge;
+    </script>
+</body>
+
+</html>
