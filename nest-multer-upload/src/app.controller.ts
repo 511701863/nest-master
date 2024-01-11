@@ -15,7 +15,7 @@ import {
 import { AppService } from './app.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './storage';
-import { FileSizeValidationPipe } from './file-size-validation-pipe.pipe';
+// import { FileSizeValidationPipe } from './file-size-validation-pipe.pipe';
 import * as fs from 'fs';
 
 @Controller()
