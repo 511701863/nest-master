@@ -18,7 +18,6 @@ export class LoggerService {
   findOne(id: number) {
     this.myLogger.log('xxxxxx', LoggerService.name);
     this.myLogger.log('xxxxxx', LoggerService.name);
-    this.myLogger.log('xxxxxx', LoggerService.name);
     return `This action returns a #${id} logger`;
   }
 
