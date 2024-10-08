@@ -45,8 +45,8 @@ export class CityService {
     //   cityChild2.parent = parent2
     // }
     // await this.cityRepository.save(cityChild2)
-    
-    //查询树结构
+
+    //查询树结构 find为扁平数据
     const treeData = await this.manage.getTreeRepository(City).findTrees()
     return treeData;
   }
