@@ -45,7 +45,8 @@ export class CityService {
     //   cityChild2.parent = parent2
     // }
     // await this.cityRepository.save(cityChild2)
-
+    
+    //查询树结构
     const treeData = await this.manage.getTreeRepository(City).findTrees()
     return treeData;
   }
